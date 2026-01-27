@@ -1,0 +1,260 @@
+# The master view config for the ambient temperature dashboard
+views:
+  - title: Home
+    sections:
+      - type: grid
+        cards:
+          - type: custom:mushroom-select-card
+            entity: input_select.graph_range
+            fill_container: false
+            grid_options:
+              columns: 12
+              rows: 2
+        column_span: 3
+      - type: grid
+        cards:
+          - type: heading
+            heading_style: title
+            heading: Temperatures
+          - type: custom:apexcharts-card
+            section_mode: true
+            grid_options: 
+              rows: 6
+              columns: 52
+            header:
+              show: true
+              title: Summary
+              show_states: true
+              colorize_states: true
+            graph_span: 1d
+            span:
+              end: hour
+            series:
+              - entity: sensor.aq2_temperature
+                name: Living Room
+                stroke_width: 2
+                yaxis_id: indoor
+              - entity: sensor.downstairs_temperature
+                name: Cathy's Office
+                stroke_width: 2
+                yaxis_id: indoor
+              - entity: sensor.ecobee_temp_set_point
+                name: Set Point
+                stroke_width: 3
+                curve: stepline
+                yaxis_id: indoor
+              - entity: sensor.thermostat_current_temperature
+                name: Thermostat
+                stroke_width: 2
+                yaxis_id: indoor
+              - entity: climate.thermostat
+                attribute: hvac_action
+                name: Heat
+                type: area
+                transform: |
+                  return x === 'heating' ? 1 : 0;
+                fill_raw: 'null'
+                stroke_width: 2
+                curve: stepline
+                opacity: 0.2
+                show:
+                  legend_value: false
+                yaxis_id: heat
+            yaxis:
+              - id: indoor
+                show: true
+              - id: heat
+                min: 0
+                max: 1
+                decimals: 0
+                show: false
+                opposite: true
+          - type: custom:apexcharts-card
+            section_mode: true
+            grid_options:
+              rows: 6
+              columns: 52
+            graph_span: 5d
+            header:
+              show: true
+              title: All
+              show_states: true
+              colorize_states: true
+            series:
+              - entity: sensor.aq2_temperature
+                name: Living Room
+                stroke_width: 2
+                yaxis_id: indoor
+              - entity: sensor.aq3_temperature
+                name: Bedroom
+                stroke_width: 2
+                yaxis_id: indoor
+              - entity: sensor.aq4_temperature
+                name: Bathroom
+                stroke_width: 2
+                yaxis_id: indoor
+              - entity: sensor.downstairs_temperature
+                name: Cathy's Office
+                stroke_width: 2
+                yaxis_id: indoor
+              - entity: sensor.hue_motion_sensor_1_temperature
+                name: Hue Motion 1
+                stroke_width: 2
+                yaxis_id: indoor
+              - entity: sensor.thermostat_current_temperature
+                name: Thermostat
+                stroke_width: 2
+                yaxis_id: indoor
+            yaxis:
+              - id: indoor
+                show: true
+              - id: outdoor
+                show: true
+                opposite: true
+        column_span: 4
+      - cards:
+          - type: heading
+            heading: History
+          - title: Summary
+            type: history-graph
+            entities:
+              - entity: climate.thermostat
+              - entity: sensor.aq2_temperature
+              - entity: sensor.downstairs_temperature
+              - entity: sensor.ecobee_temp_set_point
+            grid_options:
+              columns: 36
+              rows: 5
+            hours_to_show: 120
+        column_span: 3
+      - type: grid
+        cards:
+          - type: history-graph
+            entities:
+              - entity: sensor.edmonton_temperature
+              - entity: sensor.edmonton_wind_chill
+              - entity: sensor.edmonton_humidex
+              - entity: sensor.edmonton_normal_high_temperature
+              - entity: sensor.edmonton_normal_low_temperature
+            title: Outside
+            hours_to_show: 120
+            grid_options:
+              columns: 36
+              rows: 5
+          - type: heading
+            heading: New section
+          - show_current: true
+            show_forecast: true
+            type: weather-forecast
+            entity: weather.edmonton_forecast
+            forecast_type: daily
+          - type: custom:horizon-card
+          - type: history-graph
+            entities:
+              - entity: sensor.aq2_pressure
+            title: Pressure
+            hours_to_show: 96
+          - type: history-graph
+            entities:
+              - entity: sensor.aq2_humidity
+                name: Living Room
+              - entity: sensor.aqara_temp_1_humidity
+                name: AQ1
+              - entity: sensor.aq3_humidity
+                name: Bedroom
+              - entity: sensor.aq4_humidity
+                name: Primary Bathroom
+              - entity: sensor.thermostat_current_humidity
+            title: Indoor humidities
+            hours_to_show: 96
+            grid_options:
+              columns: 24
+              rows: 6
+          - type: history-graph
+            entities:
+              - entity: sensor.edmonton_aqhi
+            hours_to_show: 72
+            title: AQHI
+        column_span: 3
+      - type: grid
+        cards:
+          - type: heading
+            heading_style: title
+            heading: Edmonton
+          - square: false
+            type: grid
+            columns: 3
+            cards:
+              - type: entities
+                entities:
+                  - entity: sensor.edmonton_advisory
+                    name: Advisory
+                  - entity: sensor.edmonton_aqhi
+                    name: AQHI
+                  - entity: sensor.edmonton_barometric_pressure
+                    name: Barometric pressure
+                  - entity: sensor.edmonton_chance_of_precipitation
+                    name: Chance of precipitation
+                  - entity: sensor.edmonton_current_condition
+                    name: Current condition
+                  - entity: sensor.edmonton_dew_point
+                    name: Dew point
+                  - entity: sensor.edmonton_endings
+                    name: Endings
+                  - entity: sensor.edmonton_high_temperature
+                    name: High temperature
+                  - entity: sensor.edmonton_humidex
+                    name: Humidex
+                  - entity: sensor.edmonton_temperature
+                    name: Temperature
+                  - entity: sensor.edmonton_tendency
+                    name: Tendency
+              - type: entities
+                entities:
+                  - entity: sensor.edmonton_humidity
+                    name: Humidity
+                  - entity: sensor.edmonton_icon_code
+                    name: Icon code
+                  - entity: sensor.edmonton_low_temperature
+                    name: Low temperature
+                  - entity: sensor.edmonton_normal_high_temperature
+                    name: Normal high temperature
+                  - entity: sensor.edmonton_normal_low_temperature
+                    name: Normal low temperature
+                  - entity: sensor.edmonton_observation_time
+                    name: Observation time
+                  - entity: sensor.edmonton_precipitation_yesterday
+                    name: Precipitation yesterday
+                  - entity: sensor.edmonton_statements
+                    name: Statements
+                  - entity: sensor.edmonton_summary
+                    name: Summary
+              - type: entities
+                entities:
+                  - entity: sensor.edmonton_uv_index
+                    name: UV index
+                  - entity: sensor.edmonton_visibility
+                    name: Visibility
+                  - entity: sensor.edmonton_warnings
+                    name: Warnings
+                  - entity: sensor.edmonton_watches
+                    name: Watches
+                  - entity: sensor.edmonton_wind_bearing
+                    name: Wind bearing
+                  - entity: sensor.edmonton_wind_chill
+                    name: Wind chill
+                  - entity: sensor.edmonton_wind_direction
+                    name: Wind direction
+                  - entity: sensor.edmonton_wind_gust
+                    name: Wind gust
+                  - entity: sensor.edmonton_wind_speed
+                    name: Wind speed
+            grid_options:
+              columns: 36
+              rows: 1
+          - type: heading
+            heading: New section
+        column_span: 3
+    type: sections
+    max_columns: 3
+    cards: []
