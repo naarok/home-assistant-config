@@ -1,4 +1,3 @@
-# The master view config for the ambient temperature dashboard
 views:
   - title: Home
     sections:
@@ -16,116 +15,116 @@ views:
           - type: heading
             heading_style: title
             heading: Temperatures
-          - type: custom:apexcharts-card
-            section_mode: true
-            grid_options: 
-              rows: 6
-              columns: 52
-            header:
+      - type: custom:config-template-card
+        entities:
+          - input_select.graph_range
+        variables:
+          span: states['input_select.graph_range'].state
+        card:
+          type: custom:apexcharts-card
+          grid_options:
+            columns: full
+          apex_config:
+            chart:
+              height: 200px
+          header:
+            show: true
+            title: Summary
+            show_states: true
+            colorize_states: true
+          graph_span: ${span}
+          span:
+            end: hour
+          series:
+            - entity: sensor.aq2_temperature
+              name: Living Room
+              stroke_width: 2
+              yaxis_id: indoor
+            - entity: sensor.downstairs_temperature
+              name: Cathy's Office
+              stroke_width: 2
+              yaxis_id: indoor
+            - entity: sensor.ecobee_temp_set_point
+              name: Set Point
+              stroke_width: 3
+              curve: stepline
+              yaxis_id: indoor
+            - entity: sensor.thermostat_current_temperature
+              name: Thermostat
+              stroke_width: 2
+              yaxis_id: indoor
+            - entity: climate.thermostat
+              attribute: hvac_action
+              name: Heat
+              type: area
+              transform: |
+                return x === 'heating' ? 1 : 0;
+              fill_raw: 'null'
+              stroke_width: 2
+              curve: stepline
+              opacity: 0.2
+              show:
+                legend_value: false
+              yaxis_id: heat
+          yaxis:
+            - id: indoor
               show: true
-              title: Summary
-              show_states: true
-              colorize_states: true
-            graph_span: 1d
-            span:
-              end: hour
-            series:
-              - entity: sensor.aq2_temperature
-                name: Living Room
-                stroke_width: 2
-                yaxis_id: indoor
-              - entity: sensor.downstairs_temperature
-                name: Cathy's Office
-                stroke_width: 2
-                yaxis_id: indoor
-              - entity: sensor.ecobee_temp_set_point
-                name: Set Point
-                stroke_width: 3
-                curve: stepline
-                yaxis_id: indoor
-              - entity: sensor.thermostat_current_temperature
-                name: Thermostat
-                stroke_width: 2
-                yaxis_id: indoor
-              - entity: climate.thermostat
-                attribute: hvac_action
-                name: Heat
-                type: area
-                transform: |
-                  return x === 'heating' ? 1 : 0;
-                fill_raw: 'null'
-                stroke_width: 2
-                curve: stepline
-                opacity: 0.2
-                show:
-                  legend_value: false
-                yaxis_id: heat
-            yaxis:
-              - id: indoor
-                show: true
-              - id: heat
-                min: 0
-                max: 1
-                decimals: 0
-                show: false
-                opposite: true
-          - type: custom:apexcharts-card
-            section_mode: true
-            grid_options:
-              rows: 6
-              columns: 52
-            graph_span: 5d
-            header:
+            - id: heat
+              min: 0
+              max: 1
+              decimals: 0
+              show: false
+              opposite: true
+        column_span: 3
+      - type: custom:config-template-card
+        entities:
+          - input_select.graph_range
+        variables:
+          span: states['input_select.graph_range'].state
+        card:
+          type: custom:apexcharts-card
+          grid_options:
+            columns: full
+          apex_config:
+            chart:
+              height: 200px
+          graph_span: ${span}
+          header:
+            show: true
+            title: All
+            show_states: true
+            colorize_states: true
+          series:
+            - entity: sensor.aq2_temperature
+              name: Living Room
+              stroke_width: 2
+              yaxis_id: indoor
+            - entity: sensor.aq3_temperature
+              name: Bedroom
+              stroke_width: 2
+              yaxis_id: indoor
+            - entity: sensor.aq4_temperature
+              name: Bathroom
+              stroke_width: 2
+              yaxis_id: indoor
+            - entity: sensor.downstairs_temperature
+              name: Cathy's Office
+              stroke_width: 2
+              yaxis_id: indoor
+            - entity: sensor.hue_motion_sensor_1_temperature
+              name: Hue Motion 1
+              stroke_width: 2
+              yaxis_id: indoor
+            - entity: sensor.thermostat_current_temperature
+              name: Thermostat
+              stroke_width: 2
+              yaxis_id: indoor
+          yaxis:
+            - id: indoor
               show: true
-              title: All
-              show_states: true
-              colorize_states: true
-            series:
-              - entity: sensor.aq2_temperature
-                name: Living Room
-                stroke_width: 2
-                yaxis_id: indoor
-              - entity: sensor.aq3_temperature
-                name: Bedroom
-                stroke_width: 2
-                yaxis_id: indoor
-              - entity: sensor.aq4_temperature
-                name: Bathroom
-                stroke_width: 2
-                yaxis_id: indoor
-              - entity: sensor.downstairs_temperature
-                name: Cathy's Office
-                stroke_width: 2
-                yaxis_id: indoor
-              - entity: sensor.hue_motion_sensor_1_temperature
-                name: Hue Motion 1
-                stroke_width: 2
-                yaxis_id: indoor
-              - entity: sensor.thermostat_current_temperature
-                name: Thermostat
-                stroke_width: 2
-                yaxis_id: indoor
-            yaxis:
-              - id: indoor
-                show: true
-              - id: outdoor
-                show: true
-                opposite: true
-        column_span: 4
-      - cards:
-          - type: heading
-            heading: History
-          - title: Summary
-            type: history-graph
-            entities:
-              - entity: climate.thermostat
-              - entity: sensor.aq2_temperature
-              - entity: sensor.downstairs_temperature
-              - entity: sensor.ecobee_temp_set_point
-            grid_options:
-              columns: 36
-              rows: 5
-            hours_to_show: 120
+            - id: outdoor
+              show: true
+              opposite: true
         column_span: 3
       - type: grid
         cards:
