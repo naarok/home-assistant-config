@@ -53,6 +53,12 @@ views:
               name: Thermostat
               stroke_width: 2
               yaxis_id: indoor
+            - entity: sensor.hue_outdoor_motion_sensor_1_temperature
+              name: Backyard
+              stroke_width: 1
+              stroke_dash: 2
+              yaxis_id: outdoor
+              color: black
             - entity: climate.thermostat
               attribute: hvac_action
               name: Heat
@@ -69,6 +75,9 @@ views:
           yaxis:
             - id: indoor
               show: true
+            - id: outdoor
+              show: true
+              opposite: true
             - id: heat
               min: 0
               max: 1
@@ -135,6 +144,7 @@ views:
               - entity: sensor.edmonton_humidex
               - entity: sensor.edmonton_normal_high_temperature
               - entity: sensor.edmonton_normal_low_temperature
+              - entity: sensor.hue_outdoor_motion_sensor_1_temperature
             title: Outside
             hours_to_show: 120
             grid_options:
