@@ -1,0 +1,45 @@
+- id: '1732385021594'
+  name: Veranda Twinkly
+  entities:
+    light.veranda:
+      effect_list:
+      - '0 '
+      - '1 '
+      - '2 '
+      - '3 '
+      - '4 '
+      - '5 '
+      - '6 '
+      - '7 '
+      - '8 '
+      - 9 Sparkles
+      - 10 Sparkle blue
+      - 11 Sparkles
+      - 12 Glow
+      - 13 Night Sky
+      - 14 WhiteAndGreen S
+      supported_color_modes:
+      - rgbw
+      friendly_name: Veranda
+      supported_features: 4
+      effect: '3 '
+      color_mode: rgbw
+      brightness: 255
+      hs_color:
+      - 0
+      - 0
+      rgb_color:
+      - 255
+      - 255
+      - 255
+      xy_color:
+      - 0.323
+      - 0.329
+      rgbw_color:
+      - 255
+      - 255
+      - 255
+      - 0
+      state: 'on'
+  icon: mdi:candle
+  metadata: {}

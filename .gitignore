@@ -1,0 +1,27 @@
+# Secrets / auth
+secrets.yaml
+.storage/
+.cloud/
+.google.token
+*.token
+*.key
+*.pem
+.ssh/
+
+# Runtime files
+home-assistant.log*
+OZW_Log.txt
+*.db
+*.db-shm
+*.db-wal
+
+# Backups
+backups/
+*.tar
+
+# Dependencies/cache
+deps/
+tts/
+__pycache__/
+*.pyc
+custom_components/waste_collection_schedule/waste_collection_schedule/source/dunedin_govt_nz.py

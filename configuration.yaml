@@ -1,0 +1,25 @@
+# Loads default set of integrations. Do not remove.
+default_config:
+
+#  db_url: postgresql://home_assistant:k!1lLjoay1@192.168.50.209/home_assistant?client_encoding=utf8
+# Load frontend themes from the themes folder
+frontend:
+  themes: !include_dir_merge_named themes
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+recorder:
+  db_url: mysql://home_assistant:killjoy1@192.168.50.95:3307/home_assistant?charset=utf8mb4
+  db_max_retries: 20
+  db_retry_wait: 30
+  
+sensor:
+  - platform: history_stats
+    name: Furnace runtime today (hours)
+    entity_id: binary_sensor.heating_state
+    state: "heating"
+    type: time
+    start: "{{ today_at('00:00') }}"
+    end: "{{ now() }}"

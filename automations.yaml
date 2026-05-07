@@ -1,0 +1,658 @@
+- id: '1733355192332'
+  alias: Christmas Lights On
+  description: Turns Christmas Lights On
+  triggers:
+  - event: sunset
+    offset: 0
+    trigger: sun
+  - trigger: time
+    at: 07:00:00
+  conditions: []
+  actions:
+  - action: light.turn_on
+    metadata: {}
+    data: {}
+    target:
+      label_id: christmas
+  mode: single
+- id: '1733355257289'
+  alias: Christmas Lights Off
+  description: ''
+  triggers:
+  - at: '23:07:00'
+    trigger: time
+  - trigger: time
+    at: 09:00:00
+  conditions: []
+  actions:
+  - action: light.turn_off
+    metadata: {}
+    data: {}
+    target:
+      label_id: christmas
+  mode: single
+- id: '1733539090856'
+  alias: Turn on Front Door
+  description: ''
+  triggers:
+  - trigger: sun
+    event: sunset
+    offset: 0
+  conditions: []
+  actions:
+  - action: light.turn_on
+    metadata: {}
+    target:
+      entity_id: light.front_door
+    data: {}
+  mode: single
+- id: '1733539137707'
+  alias: Turn off Front Door
+  description: ''
+  triggers:
+  - trigger: time
+    at: '23:02:00'
+  conditions: []
+  actions:
+  - action: light.turn_off
+    metadata: {}
+    target:
+      entity_id: light.front_door
+    data: {}
+  mode: single
+- id: '1734278711016'
+  alias: Chocolate On
+  description: ''
+  triggers:
+  - trigger: time
+    at: 08:00:00
+  conditions: []
+  actions:
+  - type: turn_on
+    device_id: 490736bdac67923e6cc03b0c19f4a4a5
+    entity_id: 5aece4adcaad4f298bae27b1ba686b91
+    domain: light
+  mode: single
+- id: '1734278787634'
+  alias: Chocolate Off
+  description: ''
+  triggers:
+  - trigger: time
+    at: '20:20:00'
+  conditions: []
+  actions:
+  - type: turn_off
+    device_id: 490736bdac67923e6cc03b0c19f4a4a5
+    entity_id: 5aece4adcaad4f298bae27b1ba686b91
+    domain: light
+  mode: single
+- id: '1750791388053'
+  alias: TV Lights Dark On
+  description: ''
+  triggers:
+  - device_id: 29dc1110b85f06ecd8a3606f7e8b8efc
+    domain: media_player
+    entity_id: 8445ecf4c46d5d120fa0604f8caddbb4
+    type: turned_on
+    trigger: device
+  conditions:
+  - condition: sun
+    before: sunrise
+    after: sunset
+  actions:
+  - action: hue.activate_scene
+    metadata: {}
+    data: {}
+    target:
+      entity_id: scene.tv_watch
+  mode: single
+- id: '1750791485843'
+  alias: TV Lights Off
+  description: ''
+  triggers:
+  - device_id: 29dc1110b85f06ecd8a3606f7e8b8efc
+    domain: media_player
+    entity_id: 8445ecf4c46d5d120fa0604f8caddbb4
+    type: turned_off
+    trigger: device
+  conditions: []
+  actions:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+  - action: light.turn_off
+    metadata: {}
+    data: {}
+    target:
+      device_id: c5c597faf6f1a9f4cf628d1714637b21
+  - action: light.turn_off
+    metadata: {}
+    target:
+      entity_id: light.branches
+    data: {}
+  mode: single
+- id: '1759456699857'
+  alias: New automation
+  description: ''
+  triggers:
+  - entity_id: binary_sensor.hue_outdoor_motion_sensor_1_motion
+    from: 'off'
+    to: 'on'
+    trigger: state
+  conditions:
+  - condition: not
+    conditions:
+    - condition: sun
+      after: sunrise
+      after_offset: +00:20:00
+      before: sunset
+      before_offset: -00:20:00
+  actions:
+  - alias: Turn on the light
+    target:
+      entity_id: light.outside
+    action: light.turn_on
+  - alias: Wait until there is no motion from device
+    wait_for_trigger:
+      entity_id: binary_sensor.hue_outdoor_motion_sensor_1_motion
+      from: 'on'
+      to: 'off'
+      trigger: state
+  - alias: Wait the number of seconds that has been set
+    delay: 120
+  - alias: Turn off the light
+    target:
+      entity_id: light.outside
+    action: light.turn_off
+  mode: restart
+  max_exceeded: silent
+- id: '1760753300471'
+  alias: Test Notification
+  description: ''
+  triggers:
+  - trigger: time
+    at: '17:10:00'
+  conditions: []
+  actions:
+  - action: notify.mobile_app_jzittlau_iphone
+    metadata: {}
+    data:
+      message: It is now 8:10
+  mode: single
+- id: '1760753604181'
+  alias: Notification - Remote 3 battery warning
+  description: ''
+  triggers:
+  - type: battery_level
+    device_id: 61fffa34e2bf8ee735dbb85e8a3dfbcb
+    entity_id: 34205db70cfd675f2402684b81bbcac5
+    domain: sensor
+    trigger: device
+    below: 10
+  conditions: []
+  actions:
+  - action: notify.mobile_app_jzittlau_iphone
+    metadata: {}
+    data:
+      message: Remote 3 battery below 10%
+      title: Remote 3
+      data:
+        push:
+          sound: 3rd_party_critical.caf
+  mode: single
+- id: '1761260485643'
+  alias: Notification - Dishwasher complete
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - sensor.dishwasher_operation_state
+    to: finished
+  conditions: []
+  actions:
+  - action: notify.mobile_app_jzittlau_iphone
+    metadata: {}
+    data:
+      message: dishwasher is done
+  - action: notify.alexa_media_livingroom_echo_dot
+    data:
+      message: The dishwasher is done
+  mode: single
+- id: '1761616278189'
+  alias: Notification - Washer done
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - sensor.washer_machine_state
+    from: run
+    to: stop
+  conditions: []
+  actions:
+  - action: notify.mobile_app_jzittlau_iphone
+    metadata: {}
+    data:
+      message: Washer is done
+  - action: notify.alexa_media_livingroom_echo_dot
+    data:
+      message: The washing machine is done
+  mode: single
+- id: '1768859589493'
+  alias: Test Cathy location
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - device_tracker.da_12_b3_b8_40_07
+    from:
+    - not_home
+    to:
+    - home
+  conditions: []
+  actions:
+  - action: light.turn_on
+    metadata: {}
+    target:
+      entity_id: light.branching_1
+    data: {}
+  mode: single
+- id: '1769213499661'
+  alias: Thermostat Set to Away
+  description: ''
+  triggers:
+  - trigger: time_pattern
+    minutes: /5
+  conditions:
+  - condition: state
+    entity_id: device_tracker.da_12_b3_b8_40_07
+    state:
+    - not_home
+  - condition: state
+    entity_id: device_tracker.iphone
+    state:
+    - not_home
+  actions:
+  - device_id: 7c8e3c9e0065ad207ccff96274a91cf7
+    domain: select
+    entity_id: 7324e441c54e1cb482f03b45a1ce2f41
+    type: select_option
+    option: away
+  - action: system_log.write
+    metadata: {}
+    data:
+      level: error
+      message: Naarok - setting to AWAY
+  mode: single
+- id: '1769213666881'
+  alias: Trigger - Home - Anyone
+  description: ''
+  triggers:
+  - trigger: person.entered_home
+    target:
+      entity_id: person.cathy_zittlau
+    options:
+      behavior: any
+  - trigger: person.entered_home
+    target:
+      entity_id: person.john_zittlau
+    options:
+      behavior: any
+  conditions: []
+  actions:
+  - action: automation.trigger
+    metadata: {}
+    target:
+      entity_id: automation.home_action
+    data:
+      skip_condition: true
+  mode: single
+- id: '1769817174269'
+  alias: Trigger - Away - Cathy/John
+  description: ''
+  triggers:
+  - trigger: person.left_home
+    target:
+      entity_id: person.cathy_zittlau
+    options:
+      behavior: any
+  conditions:
+  - condition: person.is_not_home
+    target:
+      entity_id: person.john_zittlau
+    options:
+      behavior: any
+  actions:
+  - action: system_log.write
+    metadata: {}
+    data:
+      level: error
+      message: 'naarok : purpose - withaction -cathy/john'
+  - action: automation.trigger
+    metadata: {}
+    target:
+      entity_id: automation.away_all_action
+    data:
+      skip_condition: true
+  mode: single
+- id: '1769817320693'
+  alias: Occupancy - Away - All
+  description: ''
+  triggers: []
+  conditions: []
+  actions:
+  - action: system_log.write
+    metadata: {}
+    data:
+      level: error
+      message: 'Naarok: Action Away All'
+  - device_id: 7c8e3c9e0065ad207ccff96274a91cf7
+    domain: select
+    entity_id: 7324e441c54e1cb482f03b45a1ce2f41
+    type: select_option
+    option: away
+  - delay:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+  - action: automation.trigger
+    metadata: {}
+    target:
+      entity_id: automation.action_lock_doors
+    data:
+      skip_condition: true
+    enabled: true
+  mode: single
+- id: '1769817432709'
+  alias: Trigger - Away - John/Cathy
+  description: ''
+  triggers:
+  - trigger: person.left_home
+    target:
+      entity_id: person.john_zittlau
+    options:
+      behavior: any
+  conditions:
+  - condition: person.is_not_home
+    target:
+      entity_id: person.cathy_zittlau
+    options:
+      behavior: any
+  actions:
+  - action: system_log.write
+    metadata: {}
+    data:
+      level: error
+      message: 'naarok : purpose - withaction - john/cathy'
+  - action: automation.trigger
+    metadata: {}
+    target:
+      entity_id: automation.away_all_action
+    data:
+      skip_condition: true
+  mode: single
+- id: '1769832665842'
+  alias: Occupancy - Home - Anyone
+  description: ''
+  triggers: []
+  conditions: []
+  actions:
+  - action: automation.trigger
+    metadata: {}
+    target:
+      entity_id: automation.action_unlock
+    data:
+      skip_condition: true
+  - device_id: 7c8e3c9e0065ad207ccff96274a91cf7
+    domain: select
+    entity_id: 7324e441c54e1cb482f03b45a1ce2f41
+    type: select_option
+    option: home
+  mode: single
+- id: '1770262387207'
+  alias: Trigger - New - Away - John Last
+  description: ''
+  triggers:
+  - trigger: person.left_home
+    target:
+      entity_id: person.john_zittlau
+    options:
+      behavior: last
+  conditions: []
+  actions:
+  - action: system_log.write
+    metadata: {}
+    data:
+      level: error
+      message: New purpose trigger John Last
+  mode: single
+- id: '1770262460326'
+  alias: Trigger - New - Away - Cathy Last
+  description: ''
+  triggers:
+  - trigger: person.left_home
+    target:
+      entity_id:
+      - person.cathy_zittlau
+    options:
+      behavior: last
+  conditions: []
+  actions:
+  - action: system_log.write
+    metadata: {}
+    data:
+      level: error
+      message: New purpose trigger Cathy Last
+  mode: single
+- id: '1770262531693'
+  alias: Trigger - New - Either home
+  description: ''
+  triggers:
+  - trigger: person.entered_home
+    target:
+      entity_id:
+      - person.cathy_zittlau
+      - person.john_zittlau
+    options:
+      behavior: first
+  conditions: []
+  actions:
+  - action: system_log.write
+    metadata: {}
+    data:
+      level: error
+      message: New purpose trigger Either Home
+  mode: single
+- id: '1770580208577'
+  alias: Trigger - Away - new - John/Cathy
+  description: ''
+  triggers:
+  - trigger: person.left_home
+    target:
+      entity_id: person.john_zittlau
+    options:
+      behavior: any
+  conditions:
+  - condition: person.is_not_home
+    target:
+      entity_id: person.cathy_zittlau
+    options:
+      behavior: any
+  actions:
+  - action: system_log.write
+    metadata: {}
+    data:
+      level: error
+      message: purpose - away - john/cathy
+  mode: single
+- id: '1770580290815'
+  alias: Trigger - Away - new - Cathy/John
+  description: ''
+  triggers:
+  - trigger: person.left_home
+    target:
+      entity_id: person.cathy_zittlau
+    options:
+      behavior: any
+  conditions:
+  - condition: person.is_not_home
+    target:
+      entity_id: person.john_zittlau
+    options:
+      behavior: any
+  actions:
+  - action: system_log.write
+    metadata: {}
+    data:
+      level: error
+      message: purpose - away - cathy/john
+  mode: single
+- id: '1770749607598'
+  alias: Back door - Lock
+  description: ''
+  triggers: []
+  conditions: []
+  actions:
+  - action: lock.lock
+    metadata: {}
+    target:
+      entity_id: lock.back_door_lock
+    data: {}
+  mode: single
+- id: '1770753856752'
+  alias: Back door - Unlock
+  description: ''
+  triggers: []
+  conditions: []
+  actions:
+  - action: lock.unlock
+    metadata: {}
+    target:
+      entity_id: lock.back_door_lock
+    data: {}
+    enabled: true
+  mode: single
+- id: '1770945326815'
+  alias: Garage Door - Unlock
+  description: ''
+  triggers:
+  - trigger: lock.unlocked
+    target:
+      entity_id: lock.back_door_lock
+    options:
+      behavior: any
+  conditions: []
+  actions:
+  - action: lock.unlock
+    metadata: {}
+    target:
+      entity_id: lock.garage_door_lock
+    data: {}
+  mode: single
+- id: '1770945472661'
+  alias: Garage Door - Lock
+  description: ''
+  triggers:
+  - trigger: lock.locked
+    target:
+      entity_id: lock.back_door_lock
+    options:
+      behavior: any
+  conditions: []
+  actions:
+  - delay:
+      hours: 0
+      minutes: 3
+      seconds: 0
+      milliseconds: 0
+  - action: lock.lock
+    metadata: {}
+    target:
+      entity_id: lock.garage_door_lock
+    data: {}
+  mode: single
+- id: '1772643077234'
+  alias: Living Room Mount Down
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - media_player.denon_avr_s970h
+    from:
+    - 'on'
+    to:
+    - 'off'
+  conditions: []
+  actions:
+  - action: scene.turn_on
+    metadata: {}
+    target:
+      device_id: 4dbb6e4aee07c6240b694fca7f9907ae
+    data: {}
+  mode: single
+- id: '1772643149505'
+  alias: Living Room Mount Up
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - media_player.denon_avr_s970h
+    from:
+    - 'off'
+    to:
+    - 'on'
+  conditions: []
+  actions:
+  - action: scene.turn_on
+    metadata: {}
+    target:
+      device_id: f059eb586600165f6c964bd5b42c6724
+    data: {}
+  mode: single
+- id: '1776385859245'
+  alias: Turn on Eave Lights
+  description: ''
+  triggers: []
+  conditions: []
+  actions:
+  - action: alexa_devices.send_text_command
+    metadata: {}
+    data:
+      device_id: 4c02d4bfbae62ceaaf074d944f70cd2e
+      text_command: Turn on Eave Lights
+  mode: single
+- id: '1776385915439'
+  alias: Turn Off Eave Lights
+  description: ''
+  triggers: []
+  conditions: []
+  actions:
+  - action: alexa_devices.send_text_command
+    metadata: {}
+    data:
+      device_id: 4c02d4bfbae62ceaaf074d944f70cd2e
+      text_command: Turn off Eave Lights
+  mode: single
+- id: '1776791672732'
+  alias: Lock doors at night
+  description: ''
+  triggers:
+  - trigger: time
+    at: '22:30:00'
+  conditions: []
+  actions:
+  - action: automation.trigger
+    metadata: {}
+    target:
+      entity_id: automation.action_lock_doors
+    data:
+      skip_condition: true
+  - action: automation.trigger
+    metadata: {}
+    target:
+      entity_id: automation.garage_door_lock_2
+    data:
+      skip_condition: true
+  mode: single
