@@ -15,10 +15,10 @@
   "issue_tracker": "https://github.com/JackJPowell/hass-unfoldedcircle/issues",
   "requirements": [
     "websockets>=15.0,<17.0",
-    "pyUnfoldedCircleRemote==0.16.0",
+    "pyUnfoldedCircleRemote==0.16.2",
     "wakeonlan==3.1.0"
   ],
-  "version": "v1.1.0",
+  "version": "v1.1.5",
   "zeroconf": [
     "_uc-remote._tcp.local."
   ]

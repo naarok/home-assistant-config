@@ -5,7 +5,7 @@ from os import getcwd
 from pathlib import Path
 from typing import Literal
 
-import requests
+from curl_cffi import requests
 from waste_collection_schedule import Collection  # type: ignore[attr-defined]
 from waste_collection_schedule.exceptions import (
     SourceArgumentException,
@@ -113,6 +113,7 @@ _LOGGER = logging.getLogger(__name__)
 PARAM_TRANSLATIONS = {
     "en": {
         "version": "(Deprecated) Version, has no effect anymore",
+        "impersonate": "Browser to impersonate (e.g. 'chrome') to pass TLS-fingerprinting WAFs",
     },
     "de": {
         "url": "URL",
@@ -127,6 +128,7 @@ PARAM_TRANSLATIONS = {
         "version": "(Veraltet) Version, hat keine Auswirkung mehr",
         "verify_ssl": "SSL-Verifizierung aktivieren",
         "headers": "Headers",
+        "impersonate": "Zu imitierender Browser (z.B. 'chrome'), um TLS-Fingerprinting-WAFs zu passieren",
     },
 }
 
@@ -146,6 +148,7 @@ class Source:
         version: int | None = None,
         verify_ssl: bool = True,
         headers: dict = {},
+        impersonate: str | None = None,
     ):
         self._url = re.sub("^webcal", "https", url) if url else None
         self._file = file
@@ -170,6 +173,7 @@ class Source:
         self._verify_ssl = verify_ssl
         self._headers = HEADERS
         self._headers.update(headers)
+        self._impersonate = impersonate
 
     def fetch(self):
         if self._url is not None:
@@ -209,14 +213,33 @@ class Source:
             return self.fetch_file(self._file)
 
     def fetch_url(self, url, params=None):
-        # get ics file
+        # curl_cffi stringifies list-valued params as Python repr instead of
+        # repeating the key like `requests` does; flatten to (key, value) pairs.
+        flat_params = (
+            [
+                (k, item)
+                for k, v in params.items()
+                for item in (v if isinstance(v, list) else [v])
+            ]
+            if params
+            else None
+        )
+
         if self._method == "GET":
             r = requests.get(
-                url, params=params, headers=self._headers, verify=self._verify_ssl
+                url,
+                params=flat_params,
+                headers=self._headers,
+                verify=self._verify_ssl,
+                impersonate=self._impersonate,
             )
         elif self._method == "POST":
             r = requests.post(
-                url, data=params, headers=self._headers, verify=self._verify_ssl
+                url,
+                data=flat_params,
+                headers=self._headers,
+                verify=self._verify_ssl,
+                impersonate=self._impersonate,
             )
         else:
             raise SourceArgumentNotFoundWithSuggestions(
@@ -227,10 +250,10 @@ class Source:
 
         r.raise_for_status()
 
-        if r.apparent_encoding == "UTF-8-SIG":
+        if r.content.startswith(b"\xef\xbb\xbf"):
             r.encoding = "UTF-8-SIG"
         else:
-            r.encoding = "utf-8"  # requests doesn't guess the encoding correctly
+            r.encoding = "utf-8"
 
         return self._convert(r.text)
 
@@ -247,9 +270,14 @@ class Source:
         return self._convert(text)
 
     def _convert(self, data):
-        dates = self._ics.convert(data)
-
         entries = []
-        for d in dates:
-            entries.append(Collection(d[0], d[1]))
+        for ev in self._ics.convert_events(data):
+            entries.append(
+                Collection(
+                    ev.date,
+                    ev.title,
+                    location=ev.location,
+                    description=ev.description,
+                )
+            )
         return entries

@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-from waste_collection_schedule import Collection
+from waste_collection_schedule import Collection, Icons
 from waste_collection_schedule.service.ICS import ICS
 
 TITLE = "Real Luzern"
@@ -14,23 +14,20 @@ TEST_CASES = {
 }
 
 ICON_MAP = {
-    "Kehricht": "mdi:trash-can",
-    "Grüngut": "mdi:leaf",
-    "Papier": "mdi:newspaper-variant-multiple",
-    "Karton": "mdi:package-variant",
-    "Altmetall": "mdi:clippy",
-    # "Altmetall": "mdi:engine",
+    "Kehricht": Icons.GENERAL_WASTE,
+    "Grüngut": Icons.ORGANIC,
+    "Papier": Icons.PAPER,
+    "Karton": Icons.PAPER,
+    "Altmetall": Icons.METAL,
 }
 
-OLD_WASTE_NAME = (
-    {  # New fetcher uses different names this should prevent breaking changes
-        "Kehrichtsammlung": "Kehricht",
-        "Grüngutsammlung": "Grüngut",
-        "Papiersammlung": "Papier",
-        "Kartonsammlung": "Karton",
-        "Alteisen/Metallsammlung": "Altmetall",
-    }
-)
+OLD_WASTE_NAME = {  # New fetcher uses different names this should prevent breaking changes
+    "Kehrichtsammlung": "Kehricht",
+    "Grüngutsammlung": "Grüngut",
+    "Papiersammlung": "Papier",
+    "Kartonsammlung": "Karton",
+    "Alteisen/Metallsammlung": "Altmetall",
+}
 
 API_URL = "https://www.real-luzern.ch/abfall/sammeldienst/abfallkalender/"
 

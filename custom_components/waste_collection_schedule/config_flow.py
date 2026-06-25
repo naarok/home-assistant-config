@@ -18,6 +18,7 @@ from homeassistant.config_entries import (
 from homeassistant.const import CONF_NAME, CONF_VALUE_TEMPLATE
 from homeassistant.core import callback
 from homeassistant.helpers.selector import (
+    BooleanSelector,
     DurationSelector,
     DurationSelectorConfig,
     IconSelector,
@@ -34,6 +35,7 @@ from homeassistant.helpers.selector import (
 )
 from homeassistant.helpers.translation import async_get_translations
 from voluptuous.schema_builder import UNDEFINED
+
 from waste_collection_schedule.collection import Collection
 from waste_collection_schedule.exceptions import (
     SourceArgumentException,
@@ -57,9 +59,13 @@ from .const import (
     CONF_DEDICATED_CALENDAR_TITLE,
     CONF_DETAILS_FORMAT,
     CONF_EVENT_INDEX,
+    CONF_FETCH_INTERVAL_DAYS,
+    CONF_FETCH_INTERVAL_DAYS_DEFAULT,
     CONF_FETCH_TIME,
     CONF_FETCH_TIME_DEFAULT,
     CONF_ICON,
+    CONF_IGNORE_DUPLICATES,
+    CONF_IGNORE_DUPLICATES_DEFAULT,
     CONF_LEADTIME,
     CONF_PICTURE,
     CONF_RANDOM_FETCH_TIME_OFFSET,
@@ -268,15 +274,20 @@ def validate_sensor_user_input(
 
     # validate value_template and date_template against cv.template
     for key in [CONF_VALUE_TEMPLATE, CONF_DATE_TEMPLATE]:
-        if key + "_preset" in sensor_input and sensor_input[key + "_preset"]:
-            if key in sensor_input:
-                errors[key] = "preset_selected"
-                errors[key + "_preset"] = "preset_selected"
-                continue
-            args.pop(key + "_preset", None)
-            args[key] = sensor_input[key + "_preset"]
+        preset_key = key + "_preset"
+        has_preset = preset_key in sensor_input and sensor_input[preset_key]
+        has_custom = key in sensor_input and sensor_input[key]
 
-        if key in sensor_input and key:
+        if has_preset and has_custom:
+            # Both a preset selection and a custom value are present.
+            # The custom value (TemplateSelector) reflects the user's direct
+            # intent, so honour it and discard the stale preset.
+            args.pop(preset_key, None)
+        elif has_preset:
+            args.pop(preset_key, None)
+            args[key] = sensor_input[preset_key]
+
+        if key in args and args[key]:
             try:
                 cv.template(args[key])
             except vol.Invalid:
@@ -379,9 +390,11 @@ class WasteCollectionConfigFlow(ConfigFlow, domain=DOMAIN):  # type: ignore[call
             {
                 vol.Required(CONF_COUNTRY_NAME): SelectSelector(
                     SelectSelectorConfig(
-                        options=[""] + list(self._sources.keys()),
+                        options=[""]
+                        + (["Generic"] if "Generic" in self._sources else [])
+                        + sorted(k for k in self._sources if k != "Generic"),
                         mode=SelectSelectorMode.DROPDOWN,
-                        sort=True,
+                        sort=False,
                     )
                 )
             }
@@ -635,9 +648,7 @@ class WasteCollectionConfigFlow(ConfigFlow, domain=DOMAIN):  # type: ignore[call
                         default=UNDEFINED if default is None else default,
                         description=description,
                     )
-                ] = (
-                    field_type or cv.string
-                )
+                ] = field_type or cv.string
             else:
                 _LOGGER.debug(
                     f"Unsupported type: {type(default)}: {arg_name}: {default}: {field_type}"
@@ -647,7 +658,11 @@ class WasteCollectionConfigFlow(ConfigFlow, domain=DOMAIN):  # type: ignore[call
         return schema, module
 
     async def __validate_args_user_input(
-        self, source: str, args_input: dict[str, Any], module: types.ModuleType
+        self,
+        source: str,
+        args_input: dict[str, Any],
+        module: types.ModuleType,
+        is_reconfigure: bool = False,
     ) -> Tuple[dict[str, str], dict[str, str], dict[str, Any]]:
         """Validate user input for source arguments.
 
@@ -655,6 +670,8 @@ class WasteCollectionConfigFlow(ConfigFlow, domain=DOMAIN):  # type: ignore[call
             source (str): source name
             args_input (dict[str, Any]): user input
             module (types.ModuleType): the module of the source
+            is_reconfigure (bool): when True, skip the unique_id collision check
+                because the existing entry legitimately owns that unique_id.
 
         Returns:
             Tuple[dict, dict, dict]: errors, description_placeholders, options
@@ -673,7 +690,10 @@ class WasteCollectionConfigFlow(ConfigFlow, domain=DOMAIN):  # type: ignore[call
             )
 
         await self.async_set_unique_id(source + json.dumps(args_input))
-        self._abort_if_unique_id_configured()
+        if not is_reconfigure:
+            # During reconfigure the existing entry already owns this unique_id;
+            # skipping the check prevents HA from aborting and creating a duplicate.
+            self._abort_if_unique_id_configured()
 
         try:
             instance = await self.hass.async_add_executor_job(
@@ -753,7 +773,7 @@ class WasteCollectionConfigFlow(ConfigFlow, domain=DOMAIN):  # type: ignore[call
         )
         errors: dict[str, str] = {}
         description_placeholders: dict[str, str] = self._get_description_placeholders(
-            self._source
+            self._id
         )
         # If all args are filled in
         if args_input is not None:
@@ -898,6 +918,18 @@ class WasteCollectionConfigFlow(ConfigFlow, domain=DOMAIN):  # type: ignore[call
         )
 
     async def finish(self) -> ConfigFlowResult:
+        if not self._options.get(CONF_SENSORS) and hasattr(self, "_fetched_types"):
+            self._options[CONF_SENSORS] = [
+                {
+                    CONF_NAME: t,
+                    CONF_DETAILS_FORMAT: "upcoming",
+                    CONF_COLLECTION_TYPES: [t],
+                    CONF_VALUE_TEMPLATE: 'on {{value.date.strftime("%a")}}, {{value.date.strftime("%d.%m.%Y")}}',
+                }
+                for t in self._fetched_types
+                if t
+            ]
+
         return self.async_create_entry(
             title=self._title,
             data=self._args_data,
@@ -934,7 +966,9 @@ class WasteCollectionConfigFlow(ConfigFlow, domain=DOMAIN):  # type: ignore[call
                 errors,
                 validation_placeholders,
                 options,
-            ) = await self.__validate_args_user_input(source, args_input, module)
+            ) = await self.__validate_args_user_input(
+                source, args_input, module, is_reconfigure=True
+            )
             # Update placeholders with validation errors
             description_placeholders.update(validation_placeholders)
             if len(errors) == 0:
@@ -1006,6 +1040,12 @@ class WasteCollectionOptionsFlow(OptionsFlow):
                     ),
                 ): TimeSelector(),
                 vol.Optional(
+                    CONF_FETCH_INTERVAL_DAYS,
+                    default=self._entry.options.get(
+                        CONF_FETCH_INTERVAL_DAYS, CONF_FETCH_INTERVAL_DAYS_DEFAULT
+                    ),
+                ): vol.All(int, vol.Range(min=1)),
+                vol.Optional(
                     CONF_RANDOM_FETCH_TIME_OFFSET,
                     default={
                         "hours": self._entry.options.get(
@@ -1033,6 +1073,12 @@ class WasteCollectionOptionsFlow(OptionsFlow):
                         CONF_DAY_OFFSET, CONF_DAY_OFFSET_DEFAULT
                     ),
                 ): int,
+                vol.Optional(
+                    CONF_IGNORE_DUPLICATES,
+                    default=self._entry.options.get(
+                        CONF_IGNORE_DUPLICATES, CONF_IGNORE_DUPLICATES_DEFAULT
+                    ),
+                ): BooleanSelector(),
                 vol.Optional(
                     "sensor_select",
                 ): SelectSelector(

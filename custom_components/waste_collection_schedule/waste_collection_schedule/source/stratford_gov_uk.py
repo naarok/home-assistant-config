@@ -2,7 +2,7 @@ from datetime import datetime
 
 import requests
 from bs4 import BeautifulSoup
-from waste_collection_schedule import Collection  # type: ignore[attr-defined]
+from waste_collection_schedule import Collection, Icons  # type: ignore[attr-defined]
 
 TITLE = "Stratford District Council"
 DESCRIPTION = (
@@ -10,18 +10,16 @@ DESCRIPTION = (
 )
 URL = "https://stratford.gov.uk"
 
-TEST_CASES = (
-    {  # if you want your address removed, please submit a request and this will be done
-        "Stratford DC": {"uprn": "100071513500"},  # doesn't have food waste
-        "Alscot Estate": {"uprn": 10024633309},
-    }
-)
+TEST_CASES = {  # if you want your address removed, please submit a request and this will be done
+    "Stratford DC": {"uprn": "100071513500"},  # doesn't have food waste
+    "Alscot Estate": {"uprn": 10024633309},
+}
 
 ICON_MAP = {
-    "Garden waste": "mdi:leaf",
-    "Refuse": "mdi:trash-can",
-    "Recycling": "mdi:recycle",
-    "Food waste": "mdi:food-apple",
+    "Garden waste": Icons.GARDEN,
+    "Refuse": Icons.GENERAL_WASTE,
+    "Recycling": Icons.RECYCLING,
+    "Food waste": Icons.BIO_KITCHEN,
 }
 # order of BINS is important, it's the order they appear left-to-right in the table.
 # these names have been chosen to accurately reflect naming convention on Stratford.gov
@@ -68,7 +66,6 @@ class Source:
             # each bin may be "checked" to show it can be collected on that date
             for idx, cell in enumerate(all_bins):
                 if cell.find("img", class_="check-img"):
-
                     entries.append(
                         Collection(date=date, t=BINS[idx], icon=ICON_MAP.get(BINS[idx]))
                     )

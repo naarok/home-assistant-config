@@ -289,16 +289,14 @@
   alias: Trigger - Home - Anyone
   description: ''
   triggers:
-  - trigger: person.entered_home
-    target:
-      entity_id: person.cathy_zittlau
-    options:
-      behavior: any
-  - trigger: person.entered_home
-    target:
-      entity_id: person.john_zittlau
-    options:
-      behavior: any
+  - trigger: zone
+    entity_id: person.cathy_zittlau
+    zone: zone.home
+    event: enter
+  - trigger: zone
+    entity_id: person.john_zittlau
+    zone: zone.home
+    event: enter
   conditions: []
   actions:
   - action: automation.trigger
@@ -312,17 +310,16 @@
   alias: Trigger - Away - Cathy/John
   description: ''
   triggers:
-  - trigger: person.left_home
-    target:
-      entity_id: person.cathy_zittlau
-    options:
-      behavior: any
+  - trigger: zone
+    entity_id: person.cathy_zittlau
+    zone: zone.home
+    event: leave
   conditions:
-  - condition: person.is_not_home
-    target:
+  - condition: not
+    conditions:
+    - condition: zone
       entity_id: person.john_zittlau
-    options:
-      behavior: any
+      zone: zone.home
   actions:
   - action: system_log.write
     metadata: {}
@@ -369,17 +366,16 @@
   alias: Trigger - Away - John/Cathy
   description: ''
   triggers:
-  - trigger: person.left_home
-    target:
-      entity_id: person.john_zittlau
-    options:
-      behavior: any
+  - trigger: zone
+    entity_id: person.john_zittlau
+    zone: zone.home
+    event: leave
   conditions:
-  - condition: person.is_not_home
-    target:
+  - condition: not
+    conditions:
+    - condition: zone
       entity_id: person.cathy_zittlau
-    options:
-      behavior: any
+      zone: zone.home
   actions:
   - action: system_log.write
     metadata: {}
@@ -655,4 +651,45 @@
       entity_id: automation.garage_door_lock_2
     data:
       skip_condition: true
+  mode: single
+- id: '1779937474193'
+  alias: extra new anyone enters
+  description: ''
+  triggers:
+  - trigger: zone
+    entity_id: person.cathy_zittlau
+    zone: zone.home
+    event: enter
+  - trigger: zone
+    entity_id: person.john_zittlau
+    zone: zone.home
+    event: enter
+  conditions: []
+  actions:
+  - action: system_log.write
+    metadata: {}
+    data:
+      level: error
+      message: Extra new anyone enters room
+  mode: single
+- id: '1779937707830'
+  alias: really new Away John/Cathy
+  description: ''
+  triggers:
+  - trigger: zone
+    entity_id: person.john_zittlau
+    zone: zone.home
+    event: leave
+  conditions:
+  - condition: not
+    conditions:
+    - condition: zone
+      entity_id: person.cathy_zittlau
+      zone: zone.home
+  actions:
+  - action: system_log.write
+    metadata: {}
+    data:
+      level: error
+      message: really new away John/Cathy
   mode: single

@@ -1,9 +1,10 @@
 import json
+import logging
 import re
 from datetime import datetime
 
 import requests
-from waste_collection_schedule import Collection  # type: ignore[attr-defined]
+from waste_collection_schedule import Collection, Icons  # type: ignore[attr-defined]
 from waste_collection_schedule.exceptions import (
     SourceArgAmbiguousWithSuggestions,
     SourceArgumentException,
@@ -35,6 +36,60 @@ API_URLS = {
     "varberg": "https://minasidor.vivab.info/FutureWebVarberg/SimpleWastePickup/",
 }
 
+# Localities (tätorter) within each municipality served by VIVAB.
+# Used to resolve a street_address to the correct regional API.
+MUNICIPALITY_LOCALITIES = {
+    "varberg": [
+        "varberg",
+        "bua",
+        "kungsäter",
+        "rolfstorp",
+        "skällinge",
+        "stråvalla",
+        "träslövsläge",
+        "tvååker",
+        "veddige",
+        "väröbacka",
+        "åskloster",
+        "åsa",
+    ],
+    "falkenberg": [
+        "falkenberg",
+        "glommen",
+        "långås",
+        "skogstorp",
+        "slöinge",
+        "ullared",
+        "vessigebro",
+        "ätran",
+        "älvsered",
+    ],
+}
+
+# Swedish month abbreviations returned by the EDP Future Webb API.
+MONTH_MAP = {
+    "Jan": 1,
+    "Feb": 2,
+    "Mar": 3,
+    "Apr": 4,
+    "Maj": 5,
+    "Jun": 6,
+    "Jul": 7,
+    "Aug": 8,
+    "Sep": 9,
+    "Okt": 10,
+    "Nov": 11,
+    "Dec": 12,
+}
+
+ICON_MAP = {
+    "Mat": Icons.BIO_KITCHEN,
+    "Hushåll": Icons.GENERAL_WASTE,
+    "Slam": Icons.GENERAL_WASTE,
+}
+
+_LOGGER = logging.getLogger(__name__)
+
 
 class Source:
     def __init__(self, street_address: str, building_id: str | int | None = None):
@@ -46,11 +101,14 @@ class Source:
 
         self._building_id = building_id
         self._street_address = street_address
+        addr_lower = street_address.lower()
         region = None
-        if "falkenberg" in street_address.lower():
-            region = "falkenberg"
-        elif "varberg" in street_address.lower():
-            region = "varberg"
+        for municipality, localities in MUNICIPALITY_LOCALITIES.items():
+            if any(
+                re.search(rf"\b{re.escape(loc)}\b", addr_lower) for loc in localities
+            ):
+                region = municipality
+                break
         if region is None:
             if self._building_id:
                 raise SourceArgumentSuggestionsExceptionBase(
@@ -60,7 +118,7 @@ class Source:
                 )
             raise SourceArgumentException(
                 "street_address",
-                "Address not supported should end with ', Varberg' or ', Falkenberg'",
+                "Address not supported, should end with a locality within the Varberg or Falkenberg municipality (e.g. 'Varberg', 'Veddige', 'Tvååker', 'Falkenberg', 'Ullared', 'Vessigebro')",
             )
         self._api_url = API_URLS[region]
 
@@ -117,6 +175,37 @@ class Source:
             "street_address", self._street_address, addresses
         )
 
+    @staticmethod
+    def _parse_date(next_pickup: str):
+        """Parse a date string from the EDP Future Webb API.
+
+        Handles three formats:
+        - ISO date:           "2025-04-03"
+        - Week + month/year:  "v18 Maj 2025"
+        - Empty string:       returns None (entry should be skipped)
+        """
+        if not next_pickup:
+            return None
+
+        if next_pickup.startswith("v"):
+            # Format: "v<week> <MonthAbbr> <year>", e.g. "v18 Maj 2025"
+            try:
+                parts = next_pickup.split()
+                month = MONTH_MAP[parts[1]]
+                date_joined = "-".join([parts[0], str(month), parts[2]])
+                return datetime.strptime(date_joined, "v%W-%m-%Y").date()
+            except (KeyError, IndexError, ValueError) as err:
+                _LOGGER.warning(
+                    "Failed to parse week-based date %r: %s", next_pickup, err
+                )
+                return None
+
+        try:
+            return datetime.fromisoformat(next_pickup).date()
+        except ValueError as err:
+            _LOGGER.warning("Failed to parse date %r: %s", next_pickup, err)
+            return None
+
     def fetch(self):
         if not self._building_id:
             self._fetch_building_id()
@@ -135,11 +224,11 @@ class Source:
         entries = []
         for item in data:
             waste_type = item["WasteType"]
-            icon = "mdi:trash-can"
-            if waste_type == "Mat":
-                icon = "mdi:food-apple"
             next_pickup = item["NextWastePickup"]
-            next_pickup_date = datetime.fromisoformat(next_pickup).date()
+            next_pickup_date = self._parse_date(next_pickup)
+            if next_pickup_date is None:
+                continue
+            icon = ICON_MAP.get(waste_type, Icons.GENERAL_WASTE)
             entries.append(Collection(date=next_pickup_date, t=waste_type, icon=icon))
 
         return entries

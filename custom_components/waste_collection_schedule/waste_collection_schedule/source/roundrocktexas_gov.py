@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 import requests
 from dateutil.rrule import FR, MO, SA, SU, TH, TU, WE, WEEKLY, YEARLY, rrule
-from waste_collection_schedule import Collection  # type: ignore[attr-defined]
+from waste_collection_schedule import Collection, Icons  # type: ignore[attr-defined]
 
 TITLE = "Round Rock Texas"
 DESCRIPTION = "Source for bin collection services for Round Rock, Texas"
@@ -15,8 +15,8 @@ TEST_CASES = {
     "Windy Park": {"neighborhood": "Windy Park"},
 }
 ICON_MAP = {
-    "Recycling": "mdi:recycle",
-    "Trash": "mdi:trash-can",
+    "Recycling": Icons.RECYCLING,
+    "Trash": Icons.GENERAL_WASTE,
 }
 DAYS = {
     "Monday": MO,
@@ -27,25 +27,17 @@ DAYS = {
     "Saturday": SA,
     "Sunday": SU,
 }
-HOLIDAYS = (
-    {  # website indicates collections falling on these days will be shifted by 1 day
-        "Thanksgiving": list(
-            rrule(YEARLY, bymonth=11, byweekday=TH(4), dtstart=datetime.now())
-        )[
-            0
-        ].date(),  # 4th Thursday in November
-        "Christmas Day": list(
-            rrule(YEARLY, bymonth=12, bymonthday=25, dtstart=datetime.now())
-        )[
-            0
-        ].date(),  # 25th December
-        "New Years Day": list(
-            rrule(YEARLY, bymonth=1, bymonthday=1, dtstart=datetime.now())
-        )[
-            0
-        ].date(),  # 1st January
-    }
-)
+HOLIDAYS = {  # website indicates collections falling on these days will be shifted by 1 day
+    "Thanksgiving": list(
+        rrule(YEARLY, bymonth=11, byweekday=TH(4), dtstart=datetime.now())
+    )[0].date(),  # 4th Thursday in November
+    "Christmas Day": list(
+        rrule(YEARLY, bymonth=12, bymonthday=25, dtstart=datetime.now())
+    )[0].date(),  # 25th December
+    "New Years Day": list(
+        rrule(YEARLY, bymonth=1, bymonthday=1, dtstart=datetime.now())
+    )[0].date(),  # 1st January
+}
 
 
 class Source:

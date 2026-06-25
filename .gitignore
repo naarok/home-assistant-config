@@ -25,3 +25,5 @@ tts/
 __pycache__/
 *.pyc
 custom_components/waste_collection_schedule/waste_collection_schedule/source/dunedin_govt_nz.py
+
+
