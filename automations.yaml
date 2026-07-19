@@ -35,9 +35,9 @@
   alias: Turn on Front Door
   description: ''
   triggers:
-  - trigger: sun
-    event: sunset
-    offset: 0
+  - trigger: sun.dusk
+    options:
+      type: civil
   conditions: []
   actions:
   - action: light.turn_on
@@ -216,9 +216,16 @@
     metadata: {}
     data:
       message: dishwasher is done
+  - action: notify.send_message
+    metadata: {}
+    target:
+      entity_id: notify.livingroom_echo_dot_speak
+    data:
+      message: The dishwasher is done
   - action: notify.alexa_media_livingroom_echo_dot
     data:
       message: The dishwasher is done
+    enabled: false
   mode: single
 - id: '1761616278189'
   alias: Notification - Washer done
@@ -235,9 +242,16 @@
     metadata: {}
     data:
       message: Washer is done
+  - action: notify.send_message
+    metadata: {}
+    target:
+      entity_id: notify.livingroom_echo_dot_speak
+    data:
+      message: The washing machine is done
   - action: notify.alexa_media_livingroom_echo_dot
     data:
       message: The washing machine is done
+    enabled: false
   mode: single
 - id: '1768859589493'
   alias: Test Cathy location
@@ -407,104 +421,6 @@
     type: select_option
     option: home
   mode: single
-- id: '1770262387207'
-  alias: Trigger - New - Away - John Last
-  description: ''
-  triggers:
-  - trigger: person.left_home
-    target:
-      entity_id: person.john_zittlau
-    options:
-      behavior: last
-  conditions: []
-  actions:
-  - action: system_log.write
-    metadata: {}
-    data:
-      level: error
-      message: New purpose trigger John Last
-  mode: single
-- id: '1770262460326'
-  alias: Trigger - New - Away - Cathy Last
-  description: ''
-  triggers:
-  - trigger: person.left_home
-    target:
-      entity_id:
-      - person.cathy_zittlau
-    options:
-      behavior: last
-  conditions: []
-  actions:
-  - action: system_log.write
-    metadata: {}
-    data:
-      level: error
-      message: New purpose trigger Cathy Last
-  mode: single
-- id: '1770262531693'
-  alias: Trigger - New - Either home
-  description: ''
-  triggers:
-  - trigger: person.entered_home
-    target:
-      entity_id:
-      - person.cathy_zittlau
-      - person.john_zittlau
-    options:
-      behavior: first
-  conditions: []
-  actions:
-  - action: system_log.write
-    metadata: {}
-    data:
-      level: error
-      message: New purpose trigger Either Home
-  mode: single
-- id: '1770580208577'
-  alias: Trigger - Away - new - John/Cathy
-  description: ''
-  triggers:
-  - trigger: person.left_home
-    target:
-      entity_id: person.john_zittlau
-    options:
-      behavior: any
-  conditions:
-  - condition: person.is_not_home
-    target:
-      entity_id: person.cathy_zittlau
-    options:
-      behavior: any
-  actions:
-  - action: system_log.write
-    metadata: {}
-    data:
-      level: error
-      message: purpose - away - john/cathy
-  mode: single
-- id: '1770580290815'
-  alias: Trigger - Away - new - Cathy/John
-  description: ''
-  triggers:
-  - trigger: person.left_home
-    target:
-      entity_id: person.cathy_zittlau
-    options:
-      behavior: any
-  conditions:
-  - condition: person.is_not_home
-    target:
-      entity_id: person.john_zittlau
-    options:
-      behavior: any
-  actions:
-  - action: system_log.write
-    metadata: {}
-    data:
-      level: error
-      message: purpose - away - cathy/john
-  mode: single
 - id: '1770749607598'
   alias: Back door - Lock
   description: ''
@@ -538,7 +454,7 @@
     target:
       entity_id: lock.back_door_lock
     options:
-      behavior: any
+      behavior: each
   conditions: []
   actions:
   - action: lock.unlock
@@ -555,7 +471,7 @@
     target:
       entity_id: lock.back_door_lock
     options:
-      behavior: any
+      behavior: each
   conditions: []
   actions:
   - delay:
@@ -692,4 +608,66 @@
     data:
       level: error
       message: really new away John/Cathy
+  mode: single
+- id: '1784242965473'
+  alias: Address Light On
+  description: ''
+  triggers:
+  - trigger: sun.dusk
+    options:
+      type: civil
+  conditions: []
+  actions:
+  - action: switch.turn_on
+    metadata: {}
+    target:
+      entity_id: switch.d215o
+    data: {}
+  mode: single
+- id: '1784243035811'
+  alias: Address Light Off
+  description: ''
+  triggers:
+  - trigger: sun.dawn
+    options:
+      type: civil
+  conditions: []
+  actions:
+  - action: switch.turn_off
+    metadata: {}
+    target:
+      entity_id: switch.d215o
+    data: {}
+  mode: single
+- id: '1784315961569'
+  alias: occupancy-home
+  description: ''
+  triggers:
+  - trigger: zone.occupancy_detected
+    options:
+      for: 00:00:00
+      zone: zone.home
+  conditions: []
+  actions:
+  - action: system_log.write
+    metadata: {}
+    data:
+      level: error
+      message: Home occupancy detected (occupancy-home)
+  mode: single
+- id: '1784316047642'
+  alias: occupancy-not-home
+  description: ''
+  triggers:
+  - trigger: zone.occupancy_cleared
+    options:
+      for: 00:00:00
+      zone: zone.home
+  conditions: []
+  actions:
+  - action: system_log.write
+    metadata: {}
+    data:
+      level: error
+      message: Home occupancy cleared (occupancy-not-home)
   mode: single
