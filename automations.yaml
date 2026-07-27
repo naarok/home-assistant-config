@@ -90,11 +90,12 @@
   alias: TV Lights Dark On
   description: ''
   triggers:
-  - device_id: 29dc1110b85f06ecd8a3606f7e8b8efc
-    domain: media_player
-    entity_id: 8445ecf4c46d5d120fa0604f8caddbb4
-    type: turned_on
-    trigger: device
+  - trigger: media_player.turned_on
+    target:
+      entity_id: media_player.living_room_area_65_oled_dlna
+    options:
+      behavior: each
+      for: 00:00:00
   conditions:
   - condition: sun
     before: sunrise
@@ -110,11 +111,12 @@
   alias: TV Lights Off
   description: ''
   triggers:
-  - device_id: 29dc1110b85f06ecd8a3606f7e8b8efc
-    domain: media_player
-    entity_id: 8445ecf4c46d5d120fa0604f8caddbb4
-    type: turned_off
-    trigger: device
+  - trigger: media_player.turned_off
+    target:
+      entity_id: media_player.living_room_area_65_oled_dlna
+    options:
+      behavior: each
+      for: 00:00:00
   conditions: []
   actions:
   - delay:
@@ -252,25 +254,6 @@
     data:
       message: The washing machine is done
     enabled: false
-  mode: single
-- id: '1768859589493'
-  alias: Test Cathy location
-  description: ''
-  triggers:
-  - trigger: state
-    entity_id:
-    - device_tracker.da_12_b3_b8_40_07
-    from:
-    - not_home
-    to:
-    - home
-  conditions: []
-  actions:
-  - action: light.turn_on
-    metadata: {}
-    target:
-      entity_id: light.branching_1
-    data: {}
   mode: single
 - id: '1769213499661'
   alias: Thermostat Set to Away
