@@ -1,0 +1,211 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "lovelace.dashboard_appliances",
+  "data": {
+    "config": {
+      "views": [
+        {
+          "title": "Home",
+          "sections": [
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "Dishwasher",
+                  "heading_style": "title"
+                },
+                {
+                  "type": "entities",
+                  "entities": [
+                    {
+                      "entity": "select.dishwasher_active_program"
+                    },
+                    {
+                      "entity": "switch.dishwasher_power"
+                    },
+                    {
+                      "entity": "number.dishwasher_start_in_relative"
+                    },
+                    {
+                      "entity": "sensor.dishwasher_door"
+                    },
+                    {
+                      "entity": "sensor.dishwasher_operation_state"
+                    },
+                    {
+                      "entity": "sensor.dishwasher_program_finish_time"
+                    },
+                    {
+                      "entity": "sensor.dishwasher_program_progress"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "Washer",
+                  "heading_style": "title"
+                },
+                {
+                  "type": "entities",
+                  "entities": [
+                    "select.washer",
+                    "select.washer_detergent_dispense_amount",
+                    "automation.washer_done",
+                    "number.washer_rinse_cycles",
+                    "select.washer_soil_level",
+                    "sensor.washer_completion_time",
+                    "sensor.washer_energy",
+                    "sensor.washer_energy_difference",
+                    "sensor.washer_energy_saved",
+                    "sensor.washer_job_state",
+                    "sensor.washer_machine_state",
+                    "binary_sensor.washer_power",
+                    "sensor.washer_power",
+                    "sensor.washer_power_energy"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "Fridge",
+                  "heading_style": "title"
+                },
+                {
+                  "type": "entities",
+                  "entities": [
+                    "switch.refrigerator_express_mode",
+                    "number.refrigerator_freezer_temperature",
+                    "number.refrigerator_fridge_temperature",
+                    "event.refrigerator_notification",
+                    "binary_sensor.refrigerator_door",
+                    "binary_sensor.refrigerator_power_saving_mode"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "Range",
+                  "heading_style": "title"
+                },
+                {
+                  "type": "entities",
+                  "entities": [
+                    {
+                      "entity": "sensor.range_temperature"
+                    },
+                    {
+                      "entity": "sensor.range_job_state"
+                    },
+                    {
+                      "entity": "sensor.range_setpoint"
+                    },
+                    {
+                      "entity": "sensor.range_oven_mode"
+                    },
+                    {
+                      "entity": "sensor.range_machine_state"
+                    }
+                  ]
+                },
+                {
+                  "type": "entities",
+                  "entities": [
+                    {
+                      "entity": "sensor.meater_probe_183f952a_ambient_temperature",
+                      "name": "Ambient"
+                    },
+                    {
+                      "entity": "sensor.meater_probe_183f952a_cook_state",
+                      "name": "Cook State"
+                    },
+                    {
+                      "entity": "sensor.meater_probe_183f952a_internal_temperature",
+                      "name": "Internal"
+                    },
+                    {
+                      "entity": "sensor.meater_probe_183f952a_peak_temperature",
+                      "name": "Peak"
+                    },
+                    {
+                      "entity": "sensor.meater_probe_183f952a_target_temperature",
+                      "name": "Target"
+                    },
+                    {
+                      "entity": "sensor.meater_probe_183f952a_time_elapsed",
+                      "name": "Time Elapsed"
+                    },
+                    {
+                      "entity": "sensor.meater_probe_183f952a_time_remaining",
+                      "name": "Time Remaining"
+                    }
+                  ],
+                  "title": "Meater"
+                }
+              ],
+              "column_span": 4
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "New section"
+                },
+                {
+                  "type": "history-graph",
+                  "entities": [
+                    {
+                      "entity": "sensor.range_setpoint"
+                    },
+                    {
+                      "entity": "sensor.range_temperature"
+                    },
+                    {
+                      "entity": "sensor.meater_probe_183f952a_ambient_temperature",
+                      "name": "Ambient Temperature"
+                    },
+                    {
+                      "entity": "sensor.meater_probe_183f952a_internal_temperature",
+                      "name": "Internal Temperature"
+                    },
+                    {
+                      "entity": "sensor.meater_probe_183f952a_cook_state",
+                      "name": "Cook State"
+                    },
+                    {
+                      "entity": "sensor.range_oven_mode"
+                    },
+                    {
+                      "entity": "binary_sensor.range_door"
+                    }
+                  ],
+                  "title": "Range",
+                  "grid_options": {
+                    "columns": 48,
+                    "rows": "auto"
+                  }
+                }
+              ],
+              "column_span": 2
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

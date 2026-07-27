@@ -1,0 +1,116 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "lovelace.dashboard_tracking",
+  "data": {
+    "config": {
+      "views": [
+        {
+          "type": "sections",
+          "sections": [
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading_style": "title",
+                  "heading": "Presence Detection"
+                },
+                {
+                  "type": "history-graph",
+                  "entities": [
+                    {
+                      "entity": "person.john_zittlau",
+                      "name": "-------------------John Zittlau"
+                    },
+                    {
+                      "entity": "person.cathy_zittlau"
+                    }
+                  ],
+                  "title": "Tracking - person",
+                  "grid_options": {
+                    "columns": 24,
+                    "rows": 3
+                  }
+                },
+                {
+                  "type": "history-graph",
+                  "entities": [
+                    {
+                      "entity": "device_tracker.jzittlau_iphone",
+                      "name": "-----------------------------John"
+                    },
+                    {
+                      "entity": "device_tracker.cathy_zittlaus_iphone"
+                    }
+                  ],
+                  "title": "Tracking - app tracker",
+                  "grid_options": {
+                    "columns": 24,
+                    "rows": 3
+                  }
+                },
+                {
+                  "type": "history-graph",
+                  "entities": [
+                    {
+                      "entity": "device_tracker.iphone"
+                    },
+                    {
+                      "entity": "device_tracker.ee_14_8a_77_a4_f3"
+                    }
+                  ],
+                  "grid_options": {
+                    "columns": "full"
+                  },
+                  "title": "Tracking - asuswrt"
+                },
+                {
+                  "type": "history-graph",
+                  "entities": [
+                    {
+                      "entity": "device_tracker.jzittlau_iphone_2",
+                      "name": "--------------jzittlau-iPhone"
+                    },
+                    {
+                      "entity": "device_tracker.cathy_zittlaus_iphone_2"
+                    }
+                  ],
+                  "title": "Tracking - iphone",
+                  "grid_options": {
+                    "columns": 24,
+                    "rows": 3
+                  }
+                },
+                {
+                  "type": "history-graph",
+                  "grid_options": {
+                    "columns": 24,
+                    "rows": "auto"
+                  },
+                  "entities": [
+                    {
+                      "entity": "automation.occupancy_home"
+                    },
+                    {
+                      "entity": "zone.home"
+                    },
+                    {
+                      "entity": "binary_sensor.someone_home",
+                      "name": "Someone home helper (binary sensor)"
+                    },
+                    {
+                      "entity": "binary_sensor.no_one_home",
+                      "name": "No one home helper"
+                    }
+                  ]
+                }
+              ],
+              "column_span": 2
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

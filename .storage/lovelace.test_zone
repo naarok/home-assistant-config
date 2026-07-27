@@ -1,0 +1,164 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "lovelace.test_zone",
+  "data": {
+    "config": {
+      "views": [
+        {
+          "title": "Home",
+          "sections": [
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "Samsung 65 TV",
+                  "heading_style": "title"
+                },
+                {
+                  "type": "button",
+                  "name": "Turn On TV",
+                  "icon": "mdi:television",
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "script.turn_on_samsung_65_tv"
+                  }
+                },
+                {
+                  "type": "button",
+                  "name": "Turn Off TV",
+                  "icon": "mdi:television",
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "script.turn_off_samsung_65_tv"
+                  }
+                },
+                {
+                  "type": "media-control",
+                  "entity": "media_player.65_oled_3"
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "New section"
+                },
+                {
+                  "initial_view": "listWeek",
+                  "type": "calendar",
+                  "entities": [
+                    "calendar.city_of_edmonton_ab"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "New section"
+                },
+                {
+                  "type": "history-graph",
+                  "entities": [
+                    {
+                      "entity": "binary_sensor.ecobee_heating_state"
+                    }
+                  ],
+                  "title": "Heating state"
+                }
+              ]
+            },
+            {
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "Denon",
+                  "heading_style": "title"
+                },
+                {
+                  "type": "history-graph",
+                  "entities": [
+                    {
+                      "entity": "media_player.denon_avr_s970h"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "Deck Light Left"
+                },
+                {
+                  "type": "tile",
+                  "entity": "light.deck_light_left"
+                }
+              ]
+            },
+            {
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "History"
+                },
+                {
+                  "title": "History",
+                  "type": "history-graph",
+                  "hours_to_show": 168,
+                  "entities": [
+                    {
+                      "entity": "sensor.hue_motion_sensor_1_illuminance"
+                    },
+                    {
+                      "entity": "sensor.aq2_temperature",
+                      "name": "Living Room"
+                    }
+                  ],
+                  "grid_options": {
+                    "columns": 24,
+                    "rows": "auto"
+                  }
+                }
+              ],
+              "column_span": 2
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "New section"
+                }
+              ]
+            },
+            {
+              "title": "History",
+              "cards": [
+                {
+                  "title": "History",
+                  "type": "history-graph",
+                  "hours_to_show": 41,
+                  "entities": [
+                    "sensor.outside_area_pirateweather_edmonton_daily_precipitation"
+                  ]
+                }
+              ]
+            }
+          ],
+          "type": "sections",
+          "max_columns": 2,
+          "cards": []
+        }
+      ]
+    }
+  }
+}

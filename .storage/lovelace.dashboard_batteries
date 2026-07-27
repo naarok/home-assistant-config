@@ -1,0 +1,87 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "lovelace.dashboard_batteries",
+  "data": {
+    "config": {
+      "views": [
+        {
+          "title": "Home",
+          "cards": [
+            {
+              "type": "custom:apexcharts-card",
+              "header": {
+                "show": true,
+                "title": "ApexCharts-Card",
+                "show_states": true,
+                "colorize_states": true
+              },
+              "series": [
+                {
+                  "entity": "sensor.remote_3_battery"
+                }
+              ]
+            },
+            {
+              "type": "gauge",
+              "entity": "sensor.hue_outdoor_motion_sensor_1_battery"
+            },
+            {
+              "type": "gauge",
+              "entity": "sensor.aqara_temp_1_battery",
+              "name": "AQ1 thermometer"
+            },
+            {
+              "type": "gauge",
+              "entity": "sensor.hue_motion_sensor_1_battery"
+            },
+            {
+              "type": "gauge",
+              "entity": "sensor.lutron_aurora_bk_top_battery"
+            },
+            {
+              "type": "gauge",
+              "entity": "sensor.lutron_aurora_bk_btm_battery"
+            },
+            {
+              "type": "gauge",
+              "entity": "sensor.lutron_aurora_kitchen_battery"
+            },
+            {
+              "type": "gauge",
+              "entity": "sensor.hue_dimmer_switch_living_room_battery"
+            },
+            {
+              "type": "gauge",
+              "entity": "sensor.front_veranda_light_wll_sw_mdl_battery"
+            },
+            {
+              "type": "gauge",
+              "entity": "sensor.hue_dimmer_switch_computer_room_battery"
+            },
+            {
+              "type": "gauge",
+              "entity": "sensor.aq2_battery",
+              "name": "Living Room Thermometer"
+            },
+            {
+              "type": "gauge",
+              "entity": "sensor.aq3_battery",
+              "name": "Bedroom Thermometer"
+            },
+            {
+              "type": "gauge",
+              "entity": "sensor.aq4_battery",
+              "name": "Rec Room thermometer"
+            },
+            {
+              "type": "gauge",
+              "entity": "sensor.back_door_lock_battery_level"
+            }
+          ],
+          "badges": []
+        }
+      ]
+    }
+  }
+}

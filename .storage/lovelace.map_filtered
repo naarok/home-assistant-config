@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "lovelace.map_filtered",
+  "data": {
+    "config": {
+      "views": [
+        {
+          "type": "panel",
+          "title": "Map",
+          "icon": "mdi:map",
+          "cards": [
+            {
+              "type": "map",
+              "auto_fit": true,
+              "entities": [
+                "zone.home",
+                "device_tracker.cathy_zittlaus_iphone",
+                "device_tracker.jzittlau_iphone"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

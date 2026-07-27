@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "lovelace.dashboard_humidity",
+  "data": {
+    "config": {
+      "views": [
+        {
+          "title": "Home",
+          "sections": [
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "New section"
+                },
+                {
+                  "type": "history-graph",
+                  "entities": [
+                    {
+                      "entity": "sensor.aq2_humidity"
+                    },
+                    {
+                      "entity": "sensor.aq4_humidity"
+                    }
+                  ],
+                  "title": "Living Room Humidity",
+                  "hours_to_show": 730
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

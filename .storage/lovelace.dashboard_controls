@@ -1,0 +1,156 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "lovelace.dashboard_controls",
+  "data": {
+    "config": {
+      "views": [
+        {
+          "title": "Home",
+          "sections": [
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "Locks",
+                  "heading_style": "title"
+                },
+                {
+                  "type": "vertical-stack",
+                  "cards": [
+                    {
+                      "type": "tile",
+                      "entity": "lock.back_door_lock",
+                      "vertical": false,
+                      "features_position": "bottom"
+                    },
+                    {
+                      "type": "tile",
+                      "entity": "lock.garage_door_lock",
+                      "vertical": false,
+                      "features_position": "bottom"
+                    }
+                  ]
+                },
+                {
+                  "type": "history-graph",
+                  "hours_to_show": 72,
+                  "entities": [
+                    {
+                      "entity": "lock.back_door_lock",
+                      "name": "Back Door"
+                    },
+                    {
+                      "entity": "lock.garage_door_lock"
+                    }
+                  ],
+                  "grid_options": {
+                    "columns": 33,
+                    "rows": 2
+                  }
+                }
+              ],
+              "column_span": 4
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "Living Room",
+                  "heading_style": "title"
+                },
+                {
+                  "type": "custom:mushroom-light-card",
+                  "entity": "light.branches",
+                  "use_light_color": true,
+                  "show_brightness_control": true
+                },
+                {
+                  "type": "custom:mushroom-light-card",
+                  "entity": "light.tv",
+                  "use_light_color": true,
+                  "show_color_temp_control": true,
+                  "show_color_control": false,
+                  "show_brightness_control": false,
+                  "fill_container": false
+                },
+                {
+                  "type": "custom:mushroom-media-player-card",
+                  "entity": "media_player.remote_3_media_player",
+                  "use_media_info": true,
+                  "show_volume_level": true,
+                  "media_controls": [],
+                  "icon_type": "entity-picture",
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 2
+                  }
+                },
+                {
+                  "type": "custom:mushroom-vacuum-card",
+                  "entity": "vacuum.roborock_s8_pro_ultra",
+                  "commands": [
+                    "start_pause",
+                    "return_home"
+                  ]
+                },
+                {
+                  "type": "custom:mushroom-entity-card",
+                  "entity": "scene.tv_watch",
+                  "tap_action": {
+                    "action": "toggle"
+                  }
+                },
+                {
+                  "type": "custom:mushroom-entity-card",
+                  "entity": "scene.tv_read",
+                  "tap_action": {
+                    "action": "toggle"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading_style": "title",
+                  "heading": "Lights",
+                  "icon": "mdi:string-lights"
+                },
+                {
+                  "show_name": true,
+                  "show_icon": true,
+                  "type": "button",
+                  "entity": "automation.christmas_on",
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "light.toggle",
+                    "target": {
+                      "label_id": "christmas"
+                    },
+                    "data": {}
+                  },
+                  "name": "Christmas Lights"
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "tile",
+                  "entity": "climate.thermostat_2"
+                }
+              ],
+              "title": "Thermostat"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "lovelace.dashboard_ecobee",
+  "data": {
+    "config": {
+      "views": [
+        {
+          "type": "sections",
+          "sections": [
+            {
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "History"
+                },
+                {
+                  "title": "History",
+                  "type": "history-graph",
+                  "hours_to_show": 36,
+                  "entities": [
+                    "sensor.thermostat_air_quality_index"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "New section"
+                },
+                {
+                  "type": "history-graph",
+                  "entities": [
+                    "sensor.thermostat_carbon_dioxide"
+                  ]
+                }
+              ]
+            },
+            {
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "History"
+                },
+                {
+                  "title": "History",
+                  "type": "history-graph",
+                  "hours_to_show": 45,
+                  "entities": [
+                    "sensor.thermostat_volatile_organic_compounds",
+                    "sensor.thermostat_action"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

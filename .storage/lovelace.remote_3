@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "lovelace.remote_3",
+  "data": {
+    "config": {
+      "views": [
+        {
+          "title": "Home",
+          "sections": [
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "New section"
+                },
+                {
+                  "type": "entities",
+                  "entities": [
+                    {
+                      "entity": "sensor.remote_3_battery"
+                    },
+                    {
+                      "entity": "binary_sensor.remote_3_charging_status"
+                    },
+                    {
+                      "entity": "sensor.remote_3_power_mode"
+                    },
+                    {
+                      "entity": "media_player.remote_3_media_player"
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:apexcharts-card",
+                  "header": {
+                    "show": true,
+                    "title": "ApexCharts-Card",
+                    "show_states": true,
+                    "colorize_states": true
+                  },
+                  "graph_span": "48h",
+                  "series": [
+                    {
+                      "entity": "sensor.remote_3_battery"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

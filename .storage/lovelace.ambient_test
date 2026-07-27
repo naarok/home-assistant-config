@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "lovelace.ambient_test",
+  "data": {
+    "config": {
+      "views": [
+        {
+          "title": "Ambient Test",
+          "type": "sections",
+          "max_columns": 3,
+          "sections": [
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "New section"
+                },
+                {
+                  "type": "custom:apexcharts-card",
+                  "header": {
+                    "show": true,
+                    "title": "ApexCharts-Card",
+                    "show_states": true,
+                    "colorize_states": true
+                  },
+                  "grid_options": {
+                    "columns": "full"
+                  },
+                  "apex_config": {
+                    "chart": {
+                      "height": "200px"
+                    }
+                  },
+                  "series": [
+                    {
+                      "entity": "sensor.mfc_j6955dw_page_counter",
+                      "data_generator": "// REMOVE ME\nconst now = new Date();\nconst data = [];\nfor(let i = 0; i <= 24; i++) {\n  data.push([now.getTime() - i * 1000 * 60 * 60, Math.floor((Math.random() * 10) + 1)])\n}\nreturn data.reverse();\n"
+                    },
+                    {
+                      "entity": "sensor.mfc_j6955dw_b_w_pages",
+                      "type": "column",
+                      "data_generator": "// REMOVE ME\nconst now = new Date();\nconst data = [];\nfor(let i = 0; i <= 24; i++) {\n  data.push([now.getTime() - i * 1000 * 60 * 60, Math.floor((Math.random() * 10) + 1)])\n}\nreturn data.reverse();\n"
+                    }
+                  ]
+                },
+                {
+                  "chart_type": "line",
+                  "period": "hour",
+                  "type": "statistics-graph",
+                  "entities": [
+                    "sensor.furnace_runtime_daily"
+                  ],
+                  "title": "Furnace Runtime"
+                }
+              ],
+              "column_span": 3
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
