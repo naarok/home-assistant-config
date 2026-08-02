@@ -1,6 +1,7 @@
 # Secrets / auth
 secrets.yaml
-.storage/
+.storage/*
+!.storage/lovelace.*
 .cloud/
 .google.token
 *.token

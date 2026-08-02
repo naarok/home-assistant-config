@@ -142,11 +142,38 @@
               "type": "grid",
               "cards": [
                 {
+                  "type": "heading",
+                  "heading": "Thermostat"
+                },
+                {
                   "type": "tile",
                   "entity": "climate.thermostat_2"
                 }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "Address Board",
+                  "heading_style": "title"
+                },
+                {
+                  "type": "tile",
+                  "entity": "switch.d215o"
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "tile",
+                  "entity": "light.front_door"
+                }
               ],
-              "title": "Thermostat"
+              "title": "Front door"
             }
           ]
         }
