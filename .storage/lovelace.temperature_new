@@ -339,6 +339,14 @@
                       "type": "line",
                       "stroke_width": 2,
                       "curve": "stepline"
+                    },
+                    {
+                      "entity": "sensor.edmonton_7_day_precipitation",
+                      "name": "7 day total",
+                      "type": "line",
+                      "show": {
+                        "in_chart": false
+                      }
                     }
                   ]
                 }
