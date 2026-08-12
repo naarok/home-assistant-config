@@ -252,62 +252,6 @@
               "column_span": 3
             },
             {
-              "type": "custom:config-template-card",
-              "entities": [
-                "input_select.graph_range"
-              ],
-              "variables": {
-                "span": "states['input_select.graph_range'].state"
-              },
-              "card": {
-                "type": "custom:apexcharts-card",
-                "grid_options": {
-                  "columns": "full"
-                },
-                "apex_config": {
-                  "chart": {
-                    "height": "200px"
-                  }
-                },
-                "header": {
-                  "show": true,
-                  "title": "Illuminance",
-                  "show_states": true,
-                  "colorize_states": true
-                },
-                "graph_span": "${span}",
-                "span": {
-                  "end": "hour"
-                },
-                "series": [
-                  {
-                    "entity": "sensor.aq2_temperature",
-                    "name": "Living Room",
-                    "stroke_width": 2,
-                    "yaxis_id": "indoor"
-                  },
-                  {
-                    "entity": "sensor.hue_motion_sensor_1_illuminance",
-                    "name": "Back Door Illuminance",
-                    "stroke_width": 2,
-                    "yaxis_id": "lux"
-                  }
-                ],
-                "yaxis": [
-                  {
-                    "id": "indoor",
-                    "show": true
-                  },
-                  {
-                    "id": "lux",
-                    "show": true,
-                    "opposite": true
-                  }
-                ]
-              },
-              "column_span": 3
-            },
-            {
               "type": "grid",
               "column_span": 3,
               "cards": [
@@ -339,6 +283,12 @@
                       "type": "line",
                       "stroke_width": 2,
                       "curve": "stepline"
+                    },
+                    {
+                      "entity": "sensor.outside_area_pirateweather_precip_intensity",
+                      "name": "Precipitation Intensity",
+                      "type": "line",
+                      "stroke_width": 2
                     },
                     {
                       "entity": "sensor.edmonton_7_day_precipitation",
@@ -445,6 +395,62 @@
                   "title": "AQHI"
                 }
               ],
+              "column_span": 3
+            },
+            {
+              "type": "custom:config-template-card",
+              "entities": [
+                "input_select.graph_range"
+              ],
+              "variables": {
+                "span": "states['input_select.graph_range'].state"
+              },
+              "card": {
+                "type": "custom:apexcharts-card",
+                "grid_options": {
+                  "columns": "full"
+                },
+                "apex_config": {
+                  "chart": {
+                    "height": "200px"
+                  }
+                },
+                "header": {
+                  "show": true,
+                  "title": "Illuminance",
+                  "show_states": true,
+                  "colorize_states": true
+                },
+                "graph_span": "${span}",
+                "span": {
+                  "end": "hour"
+                },
+                "series": [
+                  {
+                    "entity": "sensor.aq2_temperature",
+                    "name": "Living Room",
+                    "stroke_width": 2,
+                    "yaxis_id": "indoor"
+                  },
+                  {
+                    "entity": "sensor.hue_motion_sensor_1_illuminance",
+                    "name": "Back Door Illuminance",
+                    "stroke_width": 2,
+                    "yaxis_id": "lux"
+                  }
+                ],
+                "yaxis": [
+                  {
+                    "id": "indoor",
+                    "show": true
+                  },
+                  {
+                    "id": "lux",
+                    "show": true,
+                    "opposite": true
+                  }
+                ]
+              },
               "column_span": 3
             },
             {

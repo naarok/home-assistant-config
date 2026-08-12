@@ -32,7 +32,7 @@
       label_id: christmas
   mode: single
 - id: '1733539090856'
-  alias: Turn on Front Door
+  alias: Front Door Lights On
   description: ''
   triggers:
   - trigger: sun.dusk
@@ -47,7 +47,7 @@
     data: {}
   mode: single
 - id: '1733539137707'
-  alias: Turn off Front Door
+  alias: Front Door Lights Off
   description: ''
   triggers:
   - trigger: time
@@ -657,14 +657,23 @@
 - id: '1785198909572'
   alias: Capture daily precipitation for 7-day sum
   triggers:
-  - at: '23:59:00'
-    trigger: time
+  - trigger: time
+    at: '23:59:00'
+  conditions: []
   actions:
-  - target:
+  - action: input_text.set_value
+    target:
       entity_id: input_text.precipitation_7_day_history
     data:
-      value: "{% set history = (states('input_text.precipitation_7_day_history') |
-        from_json)\n   if states('input_text.precipitation_7_day_history') not in
-        ['unknown','unavailable',''] else [] %}\n{% set today = states('sensor.outside_area_pirateweather_edmonton_daily_precipitation')
-        | float(0) %} {{ (history + [today])[-7:] | to_json }}\n"
-    action: input_text.set_value
+      value: '{% set raw = states(''input_text.precipitation_7_day_history'') %}
+
+        {% set history = (raw | from_json) if raw not in [''unknown'',''unavailable'','''']
+        else [] %}
+
+        {% set today = states(''sensor.outside_area_pirateweather_edmonton_daily_precipitation'')
+        | float(0) %}
+
+        {{ ((history + [today])[-7:] | map(''round'', 2) | list) | to_json }}
+
+        '
+  mode: single

@@ -27,4 +27,13 @@ __pycache__/
 *.pyc
 custom_components/waste_collection_schedule/waste_collection_schedule/source/dunedin_govt_nz.py
 
+# Agent credentials / runtime noise
+.ha_cursor_agent_key
+.ha_run.lock
+.cache/
+
+# Integration debug dumps
+alexa_media*.html
+
+ha_vibecode_git/
 
